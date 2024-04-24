@@ -65,9 +65,9 @@ class App extends Component {
     })
   }
 
-  rePost(content, author) {
+  rePost(content, author, path) {
     this.setState({ loading: true })
-    this.state.socialNetwork.methods.rePost(content, author).send({ from: this.state.account })
+    this.state.socialNetwork.methods.rePost(content, author, path).send({ from: this.state.account })
     .once('receipt', (receipt) => {
       this.setState({ loading: false })
     })
