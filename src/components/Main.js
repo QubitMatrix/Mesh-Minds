@@ -5,7 +5,7 @@ class Main extends Component {
 
   render() {
     return (
-      <div id="mainpage" className="container-fluid mt-5">
+      <div id="mainpage" className="container-fluid mt-5 bg-dark">
         <div className="row">
           <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
             <div className="content mr-auto ml-auto">
@@ -31,27 +31,28 @@ class Main extends Component {
                 return(
                   <div>
                   
-                  <div className="card mb-4" key={key} >
-                    <div className="card-header">
+                  <div className="card mb-4 bg-dark border-light text-light" key={key} >
+                    <div className="card-header bg-dark border-light">
+
                       <img
                         className='mr-2'
                         width='30'
                         height='30'
                         src={`data:image/png;base64,${new Identicon(post.author, 30).toString()}`}
                       />
-                      Author<small className="text-muted">{post.author}</small> <br/>
-                      Sender<small className="text-muted">{post.sender}</small>
+                      <small className="text-white"><b>Author: </b>{post.author}</small> <br/>
+                      <small className="text-light"><b>Sender: </b>{post.sender}</small>
                     </div>
                     <ul id="postList" className="list-group list-group-flush">
-                      <li className="list-group-item">
+                      <li className="list-group-item bg-dark text-light">
                         <p>{post.content}</p>
                       </li>
-                      <li key={key} className="list-group-item py-2">
+                      <li key={key} className="list-group-item py-2 bg-dark border-light">
                         <small className="float-left mt-1 text-muted">
-                          TIPS: {window.web3.utils.fromWei(post.tipAmount.toString(), 'Ether')} ETH
+                          ❤️ {window.web3.utils.fromWei(post.tipAmount.toString(), 'Ether')} ETH
                         </small>
                         <button
-                          className="btn btn-link btn-sm float-right pt-0"
+                          className="btn bg-info btn-sm float-right pt-0"
                           name={post.id}
                           onClick={(event) => {
                             let tipAmount = window.web3.utils.toWei('0.1', 'Ether')
@@ -61,12 +62,14 @@ class Main extends Component {
                         >
                           TIP 0.1 ETH 
                         </button>
+                        <br/>
                         <form onSubmit={(event) => {
                           event.preventDefault()
                           const comment = this.postComment.value
                           console.log(post.id,comment);
                           this.props.addComment(post.id, comment)
                         }}>
+                          <br/>
                         <input
                           id="postComment"
                           type="text"
@@ -74,12 +77,14 @@ class Main extends Component {
                           className="form-control"
                           placeholder="What do you think?"
                           required />
-                        <button type="submit" onClick = {(event) => {
+                          <br/>
+                        <button type="submit" className="btn btn-sm pt-0 bg-info" onClick = {(event) => {
                           console.log(this.postComment.value, post.id)
-                        }}>Comment</button>
+                        }}>➕</button>
                         </form>
-                        <h3>Comments</h3>
-                        <button onClick={(event) => {
+                        <br/>
+                        <p className='text-light'>Comments</p>
+                        <button className='btn btn-sm pt-0 bg-info' onClick={(event) => {
                           let count=0;
                           while(count<post.commentCount)
                           {
@@ -88,9 +93,9 @@ class Main extends Component {
                           }
 
                         }}>Get Comments</button>
-                        { this.props.commentss.map((comment,key) => {return(<div><p>{comment}</p></div>)})}
+                        { this.props.commentss.map((comment,key) => {return(<div className='text-white shadow p-2'><p>{comment}</p></div>)})}
                         <br/><br/>
-                        <button onClick={(event) => {
+                        <button className='btn btn-sm pt-0 bg-info' onClick={(event) => {
                           event.preventDefault()
                           const content = post.content
                           const sender = post.author
