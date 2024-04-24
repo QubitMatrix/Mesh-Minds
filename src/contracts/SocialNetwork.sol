@@ -15,6 +15,7 @@ contract SocialNetwork {
         address sender;
         address payable author;
         uint commentCount;
+        string path;
         //mapping(uint => string) comments;
         //string[] comment;
         //string comment;
@@ -49,6 +50,11 @@ contract SocialNetwork {
         uint timestamp
     );
 
+    event AddPath(
+        uint id,
+        string path
+    );
+
     constructor() public {
         name = "MESH MINDS";
     }
@@ -61,7 +67,7 @@ contract SocialNetwork {
         Comment memory _comment = Comment("", 0);
         //mapping(uint=>Comment) storage t;
         // Create the post
-        posts[postCount] = Post(postCount, _content, 0, msg.sender, msg.sender, 0);
+        posts[postCount] = Post(postCount, _content, 0, msg.sender, msg.sender, 0, "");
         posts[postCount].comments[0] = _comment;
         // Trigger event
         emit PostCreated(postCount, _content, 0, msg.sender, msg.sender, 0);
@@ -74,7 +80,7 @@ contract SocialNetwork {
         postCount ++;
         Comment memory _comment = Comment("", 0);
         // Create the post
-        posts[postCount] = Post(postCount, _content, 0, msg.sender, _owner, 0);
+        posts[postCount] = Post(postCount, _content, 0, msg.sender, _owner, 0, "");
 
         posts[postCount].comments[0] = _comment;
         // Trigger event
@@ -113,5 +119,11 @@ contract SocialNetwork {
     function getComment(uint _id, uint count) public returns(string memory)
     {
         return (posts[_id].comments[count].message);
+    }
+
+    function addIPFSPath(string memory path) public 
+    {
+        posts[postCount].path=path;
+        emit AddPath(postCount, posts[postCount].path);
     }
 }

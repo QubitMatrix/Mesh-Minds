@@ -4,6 +4,7 @@ import './App.css';
 import SocialNetwork from '../abis/SocialNetwork.json'
 import Navbar from './Navbar'
 import Main from './Main'
+import { create } from "ipfs-http-client";
 
 class App extends Component {
 
@@ -94,6 +95,15 @@ class App extends Component {
     this.state.socialNetwork.methods.getComment(id, count).call().then((comment)=>{console.log(count+comment); this.setState({comment: [...this.state.comment, comment]})})
   }
 
+  addIPFSPath(path)
+  {
+    this.setState({ loading: true })
+    this.state.socialNetwork.methods.addIPFSPath(path).send({ from: this.state.account})
+    .once('receipt', (receipt) => {
+      this.setState({ loading: false })
+    })
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -110,9 +120,11 @@ class App extends Component {
     this.tipPost = this.tipPost.bind(this)
     this.addComment = this.addComment.bind(this)
     this.getComment = this.getComment.bind(this)
+    this.addIPFSPath = this.addIPFSPath.bind(this)
   }
 
   render() {
+    
     return (
       <div>
         <Navbar account={this.state.account} />
@@ -127,6 +139,7 @@ class App extends Component {
               tipPost={this.tipPost}
               addComment={this.addComment}
               getComment={this.getComment}
+              addIPFSPath={this.addIPFSPath}
             />
         }
       </div>

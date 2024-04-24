@@ -1,31 +1,81 @@
 import React, { Component } from 'react';
 import Identicon from 'identicon.js';
+import { useState } from 'react'
+import { create } from "ipfs-http-client";
 
 class Main extends Component {
-
+constructor(props) {
+    super(props);
+    this.state = {
+      ipfs: "123",
+      uploadedImages: [],
+    };
+  }
   render() {
+    const ipfs = create("http://localhost:5001");
+  //const [uploadedImages, setUploadedImages] = useState([]);
+  
+  const onSubmitHandler = async (event) => {
+      event.preventDefault();
+      const form = event.target ; //this.postfile.value;
+      console.log(form)
+      const files = document.getElementById("file-upload").files;
+      //const files = form[0].files;
+  
+      if (!files || files.length === 0) {
+        return alert("No files selected");
+      }
+  
+      const file = files[0];
+      console.log(file)
+      // upload files
+      const result = await ipfs.add(file);
+      console.log(result)
+      this.setState({
+        uploadedImages: [...this.state.uploadedImages, { path: result.path }],
+      });
+      console.log("adding to contract")
+      this.props.addIPFSPath(result.path)
+      console.log("added to contract")
+      console.log(this.state.uploadedImages)
+      //form.reset();
+    };
     return (
       <div id="mainpage" className="container-fluid mt-5 bg-dark">
         <div className="row">
           <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
             <div className="content mr-auto ml-auto">
               <p>&nbsp;</p>
-                <form onSubmit={(event) => {
-                  event.preventDefault()
-                  const content = this.postContent.value
-                  this.props.createPost(content)
-                }}>
-                <div className="form-group mr-sm-2">
-                  <input
-                    id="postContent"
-                    type="text"
-                    ref={(input) => { this.postContent = input }}
-                    className="form-control"
-                    placeholder="What's The Tea?"
-                    required />
-                </div>
-                <button type="submit" className="btn btn-primary btn-block">Share</button>
+              <br/><br/><br/>
+              <form onSubmit={(event) => {
+                event.preventDefault()
+                const content = this.postContent.value
+                this.props.createPost(content)
+              }}>
+                <label htmlFor="file-upload" className="custom-file-upload">
+                  Select File
+              </label>
+              <input id="file-upload" type="file" name="file" />
+              <button className="button" onClick={onSubmitHandler}>
+                  Upload file
+              </button>
+              <div className="form-group mr-sm-2">
+                <input
+                  id="postContent"
+                  type="text"
+                  ref={(input) => { this.postContent = input }}
+                  className="form-control"
+                  placeholder="What's The Tea?"
+                  required />
+              </div>
+              <button type="submit" className="btn btn-primary btn-block">Share</button>
               </form>
+              <br/><br/><br/>
+              <div>
+                {this.state.uploadedImages.map((image, index) => (
+                  <div key={index}>abc{image.path}</div>
+                ))}
+              </div>
               <p>&nbsp;</p>
               { this.props.posts.map((post, key) => {
                 return(
@@ -42,6 +92,7 @@ class Main extends Component {
                       />
                       <small className="text-white"><b>Author: </b>{post.author}</small> <br/>
                       <small className="text-light"><b>Sender: </b>{post.sender}</small>
+                      <img src={"https://cloudflare-ipfs.com/ipfs/"+post.path} />
                     </div>
                     <ul id="postList" className="list-group list-group-flush">
                       <li className="list-group-item bg-dark text-light">
