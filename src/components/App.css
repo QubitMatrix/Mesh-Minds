@@ -1,0 +1,12 @@
+/* Styles go here */
+.login-address
+{
+    position: fixed;
+    top: 100px;
+    left: 100px;
+}
+
+#mainpage
+{
+    display: none;
+}

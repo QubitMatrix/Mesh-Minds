@@ -29,7 +29,8 @@ class App extends Component {
     const web3 = window.web3
     // Load account
     const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
+    console.log(accounts)
+    this.setState({account: null})
     // Network ID
     const networkId = await web3.eth.net.getId()
     const networkData = SocialNetwork.networks[networkId]
@@ -115,6 +116,7 @@ class App extends Component {
     return (
       <div>
         <Navbar account={this.state.account} />
+        <input class="login-address" type="text" placeholder="address" name="address" onBlur={(event)=>{event.preventDefault(); console.log("abc"+event.target.value); this.setState({ account: event.target.value }); document.getElementById("mainpage").style.display="block";}}/>
         { this.state.loading
           ? <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
           : <Main
