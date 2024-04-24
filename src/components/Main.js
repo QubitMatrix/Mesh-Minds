@@ -29,6 +29,8 @@ class Main extends Component {
               <p>&nbsp;</p>
               { this.props.posts.map((post, key) => {
                 return(
+                  <div>
+                  
                   <div className="card mb-4" key={key} >
                     <div className="card-header">
                       <img
@@ -75,17 +77,28 @@ class Main extends Component {
                         <button type="submit" onClick = {(event) => {
                           console.log(this.postComment.value, post.id)
                         }}>Comment</button>
+                        </form>
+                        <h3>Comments</h3>
+                        <button onClick={(event) => {
+                          let count=0;
+                          while(count<post.commentCount)
+                          {
+                            this.props.getComment(post.id,count)
+                            count++;
+                          }
+
+                        }}>Get Comments</button>
+                        { this.props.commentss.map((comment,key) => {return(<div><p>{comment}</p></div>)})}
+                        <br/><br/>
                         <button onClick={(event) => {
                           event.preventDefault()
                           const content = post.content
                           const sender = post.author
                           this.props.rePost(content, sender)
                         }}>Repost</button>
-                        </form>
-                        <h3>Comments</h3>
-                        { post?post.comment?post.comment:"":""}
                       </li>
                     </ul>
+                  </div>
                   </div>
                 )
               })}

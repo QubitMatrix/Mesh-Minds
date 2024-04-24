@@ -87,6 +87,12 @@ class App extends Component {
       this.setState({ loading: false })
     })
   }
+
+  getComment(id, count)
+  {
+    this.state.socialNetwork.methods.getComment(id, count).call().then((comment)=>{console.log(count+comment); this.setState({comment: [...this.state.comment, comment]})})
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -94,13 +100,15 @@ class App extends Component {
       socialNetwork: null,
       postCount: 0,
       posts: [],
-      loading: true
+      loading: true,
+      comment: []
     }
 
     this.createPost = this.createPost.bind(this)
     this.rePost = this.rePost.bind(this)
     this.tipPost = this.tipPost.bind(this)
     this.addComment = this.addComment.bind(this)
+    this.getComment = this.getComment.bind(this)
   }
 
   render() {
@@ -111,10 +119,12 @@ class App extends Component {
           ? <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
           : <Main
               posts={this.state.posts}
+              commentss={this.state.comment}
               createPost={this.createPost}
               rePost={this.rePost}
               tipPost={this.tipPost}
               addComment={this.addComment}
+              getComment={this.getComment}
             />
         }
       </div>
