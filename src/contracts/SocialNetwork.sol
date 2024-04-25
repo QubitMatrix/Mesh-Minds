@@ -16,10 +16,6 @@ contract SocialNetwork {
         address payable author;
         uint commentCount;
         string path;
-        //mapping(uint => string) comments;
-        //string[] comment;
-        //string comment;
-        //Comment comment;
         mapping(uint=>Comment) comments;
     }
 
@@ -34,7 +30,8 @@ contract SocialNetwork {
         uint tipAmount,
         address sender,
         address payable author,
-        uint commentCount
+        uint commentCount,
+        string path
     );
 
     event PostTipped(
@@ -65,26 +62,22 @@ contract SocialNetwork {
         // Increment the post count
         postCount ++;
         Comment memory _comment = Comment("", 0);
-        //mapping(uint=>Comment) storage t;
         // Create the post
         posts[postCount] = Post(postCount, _content, 0, msg.sender, msg.sender, 0, "");
-        posts[postCount].comments[0] = _comment;
         // Trigger event
-        emit PostCreated(postCount, _content, 0, msg.sender, msg.sender, 0);
+        emit PostCreated(postCount, _content, 0, msg.sender, msg.sender, 0, "");
     }
 
-    function rePost(string memory _content, address payable _owner) public {
+    function rePost(string memory _content, address payable _owner, string memory path) public {
         // Require valid content
         require(bytes(_content).length > 0);
         // Increment the post count
         postCount ++;
         Comment memory _comment = Comment("", 0);
         // Create the post
-        posts[postCount] = Post(postCount, _content, 0, msg.sender, _owner, 0, "");
-
-        posts[postCount].comments[0] = _comment;
+        posts[postCount] = Post(postCount, _content, 0, msg.sender, _owner, 0, path);
         // Trigger event
-        emit PostCreated(postCount, _content, 0, msg.sender, _owner, 0);
+        emit PostCreated(postCount, _content, 0, msg.sender, _owner, 0, path);
     }
 
     function tipPost(uint _id) public payable {
@@ -105,11 +98,6 @@ contract SocialNetwork {
     }
     function commentPost(uint _id, string memory _comment) public {
         require(bytes(_comment).length > 0);
-        //Post storage _post = posts[_id];
-        //_post.commentCount++;
-        //_post.comments[_post.commentCount]=_content;
-        //posts[_id].comments[posts[_id].commentCount] = _content;
-        //posts[_id].comment.push(_comment);
         posts[_id].comments[posts[_id].commentCount].message = _comment;
         posts[_id].comments[posts[_id].commentCount].timestamp = block.timestamp;
         posts[_id].commentCount+=1;

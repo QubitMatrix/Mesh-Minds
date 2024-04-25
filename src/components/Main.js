@@ -7,21 +7,17 @@ class Main extends Component {
 constructor(props) {
     super(props);
     this.state = {
-      ipfs: "123",
+      ipfs: null,
       uploadedImages: [],
     };
   }
   render() {
-    const ipfs = create("http://localhost:5001");
-  //const [uploadedImages, setUploadedImages] = useState([]);
-  
+  const ipfs = create("http://localhost:5001");
   const onSubmitHandler = async (event) => {
       event.preventDefault();
       const form = event.target ; //this.postfile.value;
       console.log(form)
       const files = document.getElementById("file-upload").files;
-      //const files = form[0].files;
-  
       if (!files || files.length === 0) {
         return alert("No files selected");
       }
@@ -52,13 +48,14 @@ constructor(props) {
                 const content = this.postContent.value
                 this.props.createPost(content)
               }}>
-                <label htmlFor="file-upload" className="custom-file-upload">
+                <label htmlFor="file-upload" className="custom-file-upload" style={{color:'white', padding: '10px 6px'}}>
                   Select File
               </label>
               <input id="file-upload" type="file" name="file" />
               <button className="button" onClick={onSubmitHandler}>
                   Upload file
               </button>
+              <br/><br/><br/>
               <div className="form-group mr-sm-2">
                 <input
                   id="postContent"
@@ -92,7 +89,7 @@ constructor(props) {
                       />
                       <small className="text-white"><b>Author: </b>{post.author}</small> <br/>
                       <small className="text-light"><b>Sender: </b>{post.sender}</small>
-                      <img src={"https://cloudflare-ipfs.com/ipfs/"+post.path} />
+                      <img width="400px" src={"https://cloudflare-ipfs.com/ipfs/"+post.path} />
                     </div>
                     <ul id="postList" className="list-group list-group-flush">
                       <li className="list-group-item bg-dark text-light">
@@ -142,15 +139,19 @@ constructor(props) {
                             this.props.getComment(post.id,count)
                             count++;
                           }
+                          const comment_div = document.getElementById(key)
+                          if(comment_div)
+                            comment_div.style.display="block"
 
                         }}>Get Comments</button>
-                        { this.props.commentss.map((comment,key) => {return(<div className='text-white shadow p-2'><p>{comment}</p></div>)})}
+                        <div id={key} style={{display: 'none'}}>{this.props.commentss.map((comment,key1) => {return(<div  className='text-white shadow p-2'><p>{comment}</p></div>)})}</div>
                         <br/><br/>
                         <button className='btn btn-sm pt-0 bg-info' onClick={(event) => {
                           event.preventDefault()
                           const content = post.content
                           const sender = post.author
-                          this.props.rePost(content, sender)
+                          const path = post.path
+                          this.props.rePost(content, sender, path)
                         }}>Repost</button>
                       </li>
                     </ul>
